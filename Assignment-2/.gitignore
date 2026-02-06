@@ -1,0 +1,55 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.app
+
+# Build folders
+/bin/
+/dist/
+/build/
+
+# Go workspace file
+go.work
+
+# Dependency directories (only if you vendor — otherwise keep vendor/)
+# /vendor/
+
+# Coverage
+*.coverprofile
+coverage.out
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Test output
+/test-results/
+
+# Air live reload (if using air)
+.air.toml
+
+# Delve debugger
+__debug_bin
