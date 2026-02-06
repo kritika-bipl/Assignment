@@ -9,6 +9,11 @@ import (
 func find(value any, indent string) {
 	v := reflect.ValueOf(value)
 	t := reflect.TypeOf(value)
+	if !v.IsValid() {
+		fmt.Println("null value")
+		return
+	}
+	
 
 	switch v.Kind() {
 
@@ -33,34 +38,38 @@ func find(value any, indent string) {
 func main() {
 
 	jsonStr := `{
-		"name" : "Tolexo Online Pvt. Ltd",
-		"age_in_years" : 8.5,
-		"origin" : "Noida",
-		"head_office" : "Noida, Uttar Pradesh",
-		"address" : [
-			{
-				"street" : "91 Springboard",
-				"landmark" : "Axis Bank",
-				"city" : "Noida",
-				"pincode" : 201301,
-				"state" : "Uttar Pradesh"
-			},
-			{
-				"street" : "91 Springboard",
-				"landmark" : "Axis Bank",
-				"city" : "Noida",
-				"pincode" : 201301,
-				"state" : "Uttar Pradesh"
-			}
-		],
-		"sponsers" : {
-			"name" : "One"
-		},
-		"revenue" : "19.8 million$",
-		"no_of_employee" : 630,
-		"str_text" : ["one","two"],
-		"int_text" : [1,3,4]
-	}`
+		
+    "moq": 0.01,
+    "pack_quantity": 1,
+    "item_quantity": 3,
+    "pack_measurement_unit": {
+        "id": 2,
+        "name": "Bale"
+    },
+    "measurement_unit": {
+        "id": 1,
+        "name": "Bag"
+    },
+    "hsn": {
+        "code": "0400",
+        "id": 3343
+    },
+    "tax_rate": 18,
+    "lp": 100,
+    "mrp": 1000,
+    "companies": "9",
+    "reorder_value": "",
+    "hsn_id": 3343,
+    "tax_group": {
+        "id": 3293,
+        "name": "18%"
+    },
+    "sale": false,
+    "purchase": false,
+    "intermediate": false,
+    "is_bundle": false,
+    "users": "5"
+}`
 
 	var data any
 
