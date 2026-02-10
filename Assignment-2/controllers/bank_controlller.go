@@ -39,7 +39,7 @@ func ListBanks(db *gorm.DB) gin.HandlerFunc {
 		var banks []models.Bank
 
 		//query db for all banks
-		if err := db.Find(&banks).Error; err != nil {
+		if err := db.Preload("Branches").Find(&banks).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}

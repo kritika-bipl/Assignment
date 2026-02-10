@@ -19,5 +19,10 @@ func RegisterRoutes(r *gin.Engine , db *gorm.DB){
 		api.POST("/branches", controllers.CreateBranch(db))
 		api.GET("/branches/:bankId", controllers.ListBranchesByBank(db))
 
+		// Customers
+		api.POST("/customers", controllers.CreateCustomer(db))
+		api.GET("/customers/:id", controllers.GetCustomer(db))
+
+
 	}
 }
