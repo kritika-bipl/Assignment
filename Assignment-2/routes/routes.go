@@ -28,6 +28,23 @@ func RegisterRoutes(r *gin.Engine , db *gorm.DB){
 		api.GET("/accounts/:id", controllers.GetAccountHandler(db))
 		api.GET("/accounts/customer/:customerId", controllers.GetAccountsByCustomerHandler(db))
 
+		// Transactions
+		api.POST("/accounts/deposit", controllers.DepositHandler(db))
+		api.POST("/accounts/withdraw", controllers.WithdrawHandler(db))
+		api.GET("/accounts/:id/transactions", controllers.ListTransactions(db))
+
+		// Loans
+		api.POST("/loans/apply", controllers.ApplyLoanHandler(db))
+		api.GET("/loans/customer/:customerId", controllers.GetLoansByCustomerHandler(db))
+		api.GET("/loans/:loanId", controllers.GetLoanHandler(db))
+
+		// Loan payments
+		api.POST("/loans/repay", controllers.RepayLoanHandler(db))
+
+		// Reporting
+		api.GET("/loans/:loanId/interest-this-year", controllers.InterestThisYearHandler(db))
+		api.GET("/loans/:loanId/pending-amount", controllers.PendingAmountHandler(db))
+
 
 
 	}
