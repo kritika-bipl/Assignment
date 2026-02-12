@@ -27,7 +27,7 @@ func CreateCustomer(db *gorm.DB) gin.HandlerFunc {
 }
 
 //we are using first here because uit returns only one record
-//aslo it retirn not found error while find() return empty slice
+//also it retirn not found error while find() return empty slice
 
 func GetCustomer(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
