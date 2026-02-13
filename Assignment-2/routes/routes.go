@@ -14,19 +14,27 @@ func RegisterRoutes(r *gin.Engine , db *gorm.DB){
 		//bank api
 		api.POST("/banks", controllers.CreateBank(db))
 		api.GET("/banks", controllers.ListBanks(db))
+		api.PUT("/banks/:id", controllers.UpdateBank(db))
+		api.DELETE("/banks/:id", controllers.DeleteBank(db))
 
 		//branches
 		api.POST("/branches", controllers.CreateBranch(db))
 		api.GET("/branches/:bankId", controllers.ListBranchesByBank(db))
+		api.PUT("/branches/:id", controllers.UpdateBranch(db))
+		api.DELETE("/branches/:id", controllers.DeleteBranch(db))
 
 		// Customers
 		api.POST("/customers", controllers.CreateCustomer(db))
 		api.GET("/customers/:id", controllers.GetCustomer(db))
+		api.PUT("/customers/:id", controllers.UpdateCustomer(db))
+		api.DELETE("/customers/:id", controllers.DeleteCustomer(db))
 
 		//accounts
 		api.POST("/accounts/open", controllers.OpenAccountHandler(db))
 		api.GET("/accounts/:id", controllers.GetAccountHandler(db))
 		api.GET("/accounts/customer/:customerId", controllers.GetAccountsByCustomerHandler(db))
+		api.PUT("/accounts/:id", controllers.UpdateAccountHandler(db))
+		api.DELETE("/accounts/:id", controllers.DeleteAccountHandler(db))
 
 		// Transactions
 		api.POST("/accounts/deposit", controllers.DepositHandler(db))
@@ -37,6 +45,8 @@ func RegisterRoutes(r *gin.Engine , db *gorm.DB){
 		api.POST("/loans/apply", controllers.ApplyLoanHandler(db))
 		api.GET("/loans/customer/:customerId", controllers.GetLoansByCustomerHandler(db))
 		api.GET("/loans/:loanId", controllers.GetLoanHandler(db))
+		api.PUT("/loans/:loanId", controllers.UpdateLoanHandler(db))
+		api.DELETE("/loans/:loanId", controllers.DeleteLoanHandler(db))
 
 		// Loan payments
 		api.POST("/loans/repay", controllers.RepayLoanHandler(db))

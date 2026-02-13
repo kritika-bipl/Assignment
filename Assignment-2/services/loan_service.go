@@ -90,15 +90,10 @@ func InterestThisYear(db *gorm.DB, loanID uint) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	now := time.Now().UTC()
-	years := now.Sub(loan.StartDate).Hours() / (24 * 365)
-	if years < 0 {
-		years = 0
-	}
-	if years > 1 {
-		years = 1
-	}
-	interest := calculateInterest(loan.PrincipalAmount, loan.InterestRate, years)
+
+	rate := loan.InterestRate / 100 
+
+	interest := loan.PrincipalAmount * rate
 	return interest, nil
 }
 
