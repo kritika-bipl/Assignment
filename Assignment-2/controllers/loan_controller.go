@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kritika-bipl/Assignment/Assignment-2/models"
@@ -104,5 +105,57 @@ func PendingAmountHandler(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"pending_amount": pending})
+	}
+}
+
+func UpdateLoanHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idStr := c.Param("loanId")
+		id, _ := strconv.Atoi(idStr)
+		var payload struct {
+			Status string `json:"status"`
+		}
+		if err := c.ShouldBindJSON(&payload); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		var loan models.Loan
+		if err := db.First(&loan, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "loan not found"})
+			return
+		}
+		if payload.Status != "" {
+			loan.Status = payload.Status
+			if payload.Status == "closed" && loan.RemainingAmount <= 0 {
+				now := time.Now().UTC()
+				loan.EndDate = &now
+			}
+		}
+		if err := db.Save(&loan).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, loan)
+	}
+}
+
+func DeleteLoanHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idStr := c.Param("loanId")
+		id, _ := strconv.Atoi(idStr)
+		var loan models.Loan
+		if err := db.First(&loan, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "loan not found"})
+			return
+		}
+		if loan.RemainingAmount > 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "cannot delete active loan with pending amount"})
+			return
+		}
+		if err := db.Delete(&loan).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "loan deleted"})
 	}
 }

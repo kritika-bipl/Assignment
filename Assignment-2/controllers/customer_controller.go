@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kritika-bipl/Assignment/Assignment-2/models"
@@ -13,8 +14,8 @@ func CreateCustomer(db *gorm.DB) gin.HandlerFunc {
 
 		var cust models.Customer
 
-		if err := c.ShouldBindJSON(&cust) ; err != nil {
-			c.JSON(http.StatusBadRequest , gin.H { "error" : err.Error()})
+		if err := c.ShouldBindJSON(&cust); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -42,5 +43,43 @@ func GetCustomer(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 		c.JSON(http.StatusOK, cust)
+	}
+}
+
+func UpdateCustomer(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idStr := c.Param("id")
+		id, _ := strconv.Atoi(idStr)
+		var payload models.Customer
+		if err := c.ShouldBindJSON(&payload); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		var cust models.Customer
+		if err := db.First(&cust, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "customer not found"})
+			return
+		}
+		cust.Name = payload.Name
+		cust.Email = payload.Email
+		cust.Phone = payload.Phone
+		cust.Address = payload.Address
+		if err := db.Save(&cust).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, cust)
+	}
+}
+
+func DeleteCustomer(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idStr := c.Param("id")
+		id, _ := strconv.Atoi(idStr)
+		if err := db.Delete(&models.Customer{}, id).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "customer deleted"})
 	}
 }
