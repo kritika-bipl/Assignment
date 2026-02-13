@@ -15,6 +15,7 @@ type Loan struct {
 	RemainingAmount float64       `gorm:"type:numeric;default:0" json:"remaining_amount"`
 	StartDate       time.Time     `json:"start_date"`
 	EndDate         *time.Time    `json:"end_date"`
+    Status          string        `gorm:"size:50;default:'active'" json:"status"`
 	Payments        []LoanPayment `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"payments"`
 	CreatedAt       time.Time     `json:"created_at"`
 }
